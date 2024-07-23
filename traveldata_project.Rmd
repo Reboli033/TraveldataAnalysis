@@ -1,0 +1,58 @@
+---
+title: "Travel data"
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+date: "2023-09-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+```{r}
+library(tinytex)
+```
+
+```{r}
+travel_data <- read_csv("../Travel_data/travel_data.csv")
+head(travel_data)
+```
+```{r}
+glimpse(travel_data)
+```
+# Which one is most likelily transporation
+```{r}
+travel_data %>%
+  group_by(mode_of_trans) %>%
+  summarise(sumOftheMode = sum(count))
+```
+# Compute the average number of workers who walk to the each region
+```{r}
+travel_data %>%
+  filter(mode_of_trans == "walked") %>%
+  group_by(region) %>%
+  summarise(Average_Of_region = mean(count))
+```
+# Determine the top five states with highest number female workers who work in 2017
+
+```{r}
+travel_data %>%
+  filter(mode_of_trans == "walked",gender == "female",year == 2017) %>%
+  arrange(desc(count)) %>%
+  head(5) %>%
+  select(state,count)
+  
+```
+```{r}
+travel_data %>%
+  filter(mode_of_trans == "walked",gender == "female",year == 2017) %>%
+  slice_max(count,n = 5) %>%
+  select(state,count)
+```
+
